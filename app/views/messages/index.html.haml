@@ -27,10 +27,12 @@
       %ul.main-header__left-box__member-list
         Member：
         %li.main-header__left-box__member-list__member
-          nekoneko
-    =link_to "" do
-      .main-header__edit-btn
-        Edit
+          - @group.users.each do |user|   
+            =user.name
+    
+    .main-header__edit-btn
+      = link_to 'Edit', edit_group_path(@group), class: "main-header__edit-btn-link"
+      
   .messages
     = render @messages
 
@@ -42,23 +44,3 @@
           = fa_icon 'picture-o', class: 'icon-image'
           = f.file_field :image, class: 'input-box__image__file'
       = f.submit 'Send', class: 'submit-btn'
-
-
--# 以下復習用
-  -#       .form
-  -#   %form.new_message
-  -#     .input-box
-  -#       %input.input-box__text{ placeholder: "type a message", type: "text"}
-  -#       %label.input-box__image
-  -#         %input.input-box__image__file{ type: "file"}
-  -#         = fa_icon 'image', class: "icon-image"
-  -#     %input.submit-btn{name: "commit", type: "submit", value: "Send"}/
-
-  -# .form
-  -#   = form_for [@group, @message] do |f|
-  -#     = f.text_field :content, class: 'form__message', placeholder: 'type a message'
-  -#     .form__mask
-  -#       = f.label :image, class: 'form__mask__image' do
-  -#         = fa_icon 'picture-o', class: 'icon'
-  -#         = f.file_field :image, class: 'hidden'
-  -#     = f.submit 'Send', class: 'form__submit'
