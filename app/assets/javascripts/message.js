@@ -1,22 +1,25 @@
-$(document).on('turbolinks:load', function(){
-  function buildHTML(message){
-    var html = `<div class="message">
-    <div class="message__upper-info">
-    <div class="message__upper-info__talker">
-    ${message.user_name}
-    </div>
-    <div class="message__upper-info__date">
-    ${message.created_at}
-    </div>
-    </div>
-    <div class="message__text">
-    <p class="message__text__content">
-    ${message.content}
-    </p>
-    </div>
-    </div>`
-    return html;
-  }
+$(function() {
+  function buildHTML(message) {
+    var content = message.content ? `${ message.content }` : "";
+    var img  = message.image.url ? `${ message.image.url }` : "";
+    var html = `<div class="message" data-id="${message.id}"> 
+            <div class="upper-message">
+              <div class="upper-message__user-name">
+                ${message.user_name}
+              </div>
+              <div class="upper-message__date">
+                ${message.created_at}
+              </div>
+            </div>
+            <div class="lower-meesage">
+              <p class="lower-message__content">
+                ${content}
+              </p>
+              <img class= "lower-message__image" src=${img} >
+            </div>
+          </div>`
+        return html;
+}
   $('#new_message').on('submit', function(e){
     e.preventDefault();
     var formData = new FormData(this);
@@ -40,4 +43,25 @@ $(document).on('turbolinks:load', function(){
       alert('エラーが発生したためメッセージは送信できませんでした');
     });
   })
-});
+  var reloadMessages = function() {
+    last_message_id = $('.message:last').data("message-id");
+    $.ajax({
+      url: "api/messages",
+      type: 'get',
+      dataType: 'json',
+      data: {last_id: last_message_id}
+    })
+    .done(function(messages) {
+      var insertHTML = '';
+      messages.forEach(function (message) {
+        insertHTML = buildHTML(message); 
+      $('.messages').append(insertHTML);
+      });
+      $('.messages').animate({scrollTop: $('.messages')[0].scrollHeight}, 'fast');
+    })
+    .fail(function() {
+      alert('自動更新に失敗しました');
+    });
+  }
+  setInterval(reloadMessages, 5000);
+  });
