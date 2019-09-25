@@ -60,7 +60,7 @@ $(function() {
       $('.messages').animate({scrollTop: $('.messages')[0].scrollHeight}, 'fast');
     })
     .fail(function() {
-      alert('自動更新に失敗しました');
+      // alert('自動更新に失敗しました');
     });
   }
   setInterval(reloadMessages, 5000);
