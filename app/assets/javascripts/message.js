@@ -1,10 +1,8 @@
 $(document).on('turbolinks:load', function() {
   function buildHTML(message) {
     var text = message.content? `${ message.content }` : "";
-    console.log(text)
     var image = message.image? `<img src= ${ message.image }>` : "";
-    console.log(image)
-    var html = `<div class="message" data-id="${message.id}"> 
+    var html = `<div class="message" data-message-id="${message.id}"> 
                   <div class="message__upper-info">
                     <p class="message__upper-info__talker">
                       ${message.user_name}
@@ -46,31 +44,31 @@ $(document).on('turbolinks:load', function() {
       alert('エラーが発生したためメッセージは送信できませんでした');
     });
   })
-  var reloadMessages = function() {
-    var url = location.href ;
-    var last_message =$('.message:last').data("message-id");
-    if (url.match(/\/groups\/\d+\/messages/)){
+  var intarval = function(){
+    if (window.location.href .match(/\/groups\/\d+\/messages/)){
       var last_message_id = $('.message:last').data("message-id");
+      console.log(last_message_id)
       $.ajax({
         url: "api/messages",
-        type: 'get',
+        type: 'GET',
         dataType: 'json',
-        data: {last_id: last_message_id}
+        data: {id: last_message_id}
       })
-      .done(function(messages) {
-        var insertHTML = '';
-        messages.forEach(function (message) {
-          if (message.id > last_message){
-          insertHTML = buildHTML(message); 
+      .done(function(messages){
+        if(messages.length > 0){
+          var insertHTML = '';
+          messages.forEach(function(message) {
+          insertHTML += buildHTML(message); 
+          });
           $('.messages').append(insertHTML);
           $('.messages').animate({scrollTop: $('.messages')[0].scrollHeight}, 'fast');
           }
-        })
       })
-    .fail(function() {
-      alert('自動更新に失敗しました');
-    });
-  }
-};
-  setInterval(reloadMessages, 5000);
-  });
+        .fail(function() {
+          alert('自動更新に失敗しました');
+        });
+        
+      }
+    }
+  setInterval(intarval, 5000);
+});
