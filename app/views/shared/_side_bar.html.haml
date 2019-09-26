@@ -12,34 +12,10 @@
           = fa_icon 'cog', class: 'icon'
         
   .groups
-    .group
-      - current_user.groups.each do |group|
+    - current_user.groups.each do |group|
+      .group
         = link_to group_messages_path(group) do
           .group__name
             = group.name
           .group__message
             = group.show_last_message
-
-
-
--# <div class="chat-side">
--# <div class="side-header">
--# <div class="side-header__box">
--# <p class="side-header__box__user-name">kokoko</p>
--# <ul class="side-header__box__menu">
--# <li class="side-header__box__menu__new-group">
--# <a href="/groups/new"><i class="fa fa-edit"></i>
--# </a></li>
--# <li class="side-header__box__menu__edit-user">
--# <a href="/users/872/edit"><i class="fa fa-cog"></i>
--# </a></li>
--# </ul>
--# </div>
--# </div>
--# <div class="groups">
--# <a href="/groups/1730/messages"><div class="group">
--# <p class="group__group-name">mkemv</p>
--# <p class="group__latest-message">いいいいいいいいい</p>
--# </div>
--# </a></div>
--# </div>
